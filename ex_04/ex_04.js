@@ -1,53 +1,61 @@
+// Attendre que le DOM soit entièrement chargé avant d'exécuter le script
+document.addEventListener('DOMContentLoaded', () => {
 
-window.onload = () => {
-  const deleteButtons = document.querySelectorAll(".delete-btn");
-  const likeButtons = document.querySelectorAll(".like-btn");
-  const plusButtons = document.querySelectorAll(".plus-btn");
-  const minusButtons = document.querySelectorAll(".minus-btn");
+    // Sélectionner tous les boutons "+" (plus-btn) et les stocker dans une variable
+    const plusButtons = document.querySelectorAll('.plus-btn');
 
-  
-  deleteButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-      const productElement = event.target.closest(".item");
-      productElement.remove();
+    // Sélectionner tous les boutons "-" (minus-btn) et les stocker dans une variable
+    const minusButtons = document.querySelectorAll('.minus-btn');
+
+    // Sélectionner tous les boutons de suppression (delete-btn) et les stocker dans une variable
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+
+    // Sélectionner tous les boutons de favori (like-btn) et les stocker dans une variable
+    const likeButtons = document.querySelectorAll('.like-btn');
+
+    // Fonction pour augmenter la quantité
+    plusButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Trouver l'élément input adjacent au bouton "+"
+            const input = button.parentElement.querySelector('input');
+            // Convertir la valeur actuelle en nombre entier
+            let currentValue = parseInt(input.value);
+            // Incrémenter la valeur de 1
+            input.value = currentValue + 1;
+        });
     });
-  });
 
-  likeButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-      event.target.classList.toggle("is-active");
+    // Fonction pour diminuer la quantité
+    minusButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Trouver l'élément input adjacent au bouton "-"
+            const input = button.parentElement.querySelector('input');
+            // Convertir la valeur actuelle en nombre entier
+            let currentValue = parseInt(input.value);
+            // Décrémenter la valeur de 1 si elle est supérieure à 1
+            if (currentValue > 1) {
+                input.value = currentValue - 1;
+            }
+        });
     });
-  });
 
-  
-  plusButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-      const quantityInput = event.target.closest(".quantity").querySelector("input");
-      let quantity = parseInt(quantityInput.value, 10);
-      quantity++;
-      quantityInput.value = quantity;
+    // Fonction pour supprimer un produit du panier
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Trouver l'élément parent avec la classe "item" et le supprimer du DOM
+            const item = button.closest('.item');
+            if (item) {
+                item.remove();
+            }
+        });
     });
-  });
 
-  
-  minusButtons.forEach(button => {
-    button.addEventListener("click", (event) => {
-      const quantityInput = event.target.closest(".quantity").querySelector("input");
-      let quantity = parseInt(quantityInput.value, 10);
-      if (quantity > 1) {
-        quantity--;
-        quantityInput.value = quantity;
-      }
+    // Fonction pour basculer l'état favori (cœur)
+    likeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Basculer la classe "is-active" sur le bouton de favori
+            button.classList.toggle('is-active');
+        });
     });
-  });
-};
 
-/*
-Explications :
-1. Les boutons `delete-btn`, `like-btn`, `plus-btn`, et `minus-btn` sont sélectionnés avec `querySelectorAll`.
-2. Pour chaque bouton :
-   - `delete-btn` : supprime l'élément produit de la page.
-   - `like-btn` : ajoute ou supprime la classe `is-active` pour indiquer si le produit est aimé.
-   - `plus-btn` : augmente la quantité du produit.
-   - `minus-btn` : diminue la quantité du produit (ne descend pas en dessous de 1).
-*/
+});
